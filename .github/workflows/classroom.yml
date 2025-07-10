@@ -1,0 +1,40 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: lab7a_test
+      id: lab7a_test
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab7a_test
+        setup-command: sudo -H pip3 install pytest
+        command: pytest lab7a_test.py
+        timeout: 10
+        max-score: 1
+    - name: lab7b_test
+      id: lab7b_test
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab7b_test
+        setup-command: sudo -H pip3 install pytest
+        command: pytest lab7b_test.py
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        LAB7A_TEST_RESULTS: "${{steps.lab7a_test.outputs.result}}"
+        LAB7B_TEST_RESULTS: "${{steps.lab7b_test.outputs.result}}"
+      with:
+        runners: lab7a_test,lab7b_test
