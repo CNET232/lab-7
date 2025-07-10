@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Author:
 # Date:
 # Purpose: Introduce functions by creating a DnD name generator.
